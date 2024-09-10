@@ -13,7 +13,6 @@ class User(Base):
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     
-    # Relación directa con FavoriteItem
     favorites = relationship("FavoriteItem", back_populates="user")
 
 class FavoriteItem(Base):
@@ -25,26 +24,36 @@ class FavoriteItem(Base):
     attribute1 = Column(String(100))
     attribute2 = Column(String(100))
 
-    user = relationship("User", back_populates="favorites")
+    character_id = Column(Integer, ForeignKey("characters.id"))
+    planet_id = Column(Integer, ForeignKey("planets.id"))
+    starship_id = Column(Integer, ForeignKey("starships.id"))
 
-class Character(FavoriteItem):
+    user = relationship("User", back_populates="favorites")
+    character = relationship("Character")
+    planet = relationship("Planet")
+    starship = relationship("Starship")
+
+class Character(Base):
     __tablename__ = "characters"
-    id = Column(Integer, ForeignKey("favorites.id"), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
     height = Column(Float, nullable=False)
     mass = Column(Float, nullable=False)
     hair_color = Column(String(50), nullable=False)
     skin_color = Column(String(50), nullable=False)
 
-class Planet(FavoriteItem):
+class Planet(Base):
     __tablename__ = "planets"
-    id = Column(Integer, ForeignKey("favorites.id"), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
     population = Column(Integer, nullable=False)
     terrain = Column(String(50), nullable=False)
     climate = Column(String(50), nullable=False)
 
-class Starship(FavoriteItem):
+class Starship(Base):
     __tablename__ = "starships"
-    id = Column(Integer, ForeignKey("favorites.id"), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
     model = Column(String(50), nullable=False)
     manufacturer = Column(String(50), nullable=False)
     cargo_capacity = Column(Integer, nullable=False)
